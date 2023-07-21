@@ -21,6 +21,8 @@ TagManager:
   - Succubus_Spawner
   - Vampire_Spawner
   - Tower
+  - Human
+  - Undead
   layers:
   - Default
   - TransparentFX
@@ -28,10 +30,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - whatIsGround
+  - whatIsHuman
+  - whatisUndead
+  - Stopper
   - 
   - 
   - 

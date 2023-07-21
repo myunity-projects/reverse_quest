@@ -5,63 +5,49 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
+    private const string Mode = "Mode";
+
+    private const int Idle = 0;
+    private const int Run = 1;
+    private const int Attack = 2;
+    private const int Death = 3;
+    private const int Victory = 4;
+
     private Animator _animator;
-
-
-    private const string attackAnim = "isAttacking";
-    private const string idleAnim = "isIdling";
-    private const string deathAnim = "Dead";    
-    private const string victoryAnim = "Victory";
 
     void Start()
     {
         _animator = GetComponent<Animator>();
     }
 
-    public void AttackAnim(float attackInterval)
+    public void IdleAnim()
     {
-        StartCoroutine(AttackAnimation(attackInterval));
+        _animator.SetInteger(Mode, Idle);
+    }
+
+    public void AttackAnim()
+    {
+        _animator.SetInteger(Mode, Attack);
     }
 
     public void DeathAnim()
     {
-        StartCoroutine(TriggerdDeathAnimation());
+        _animator.SetInteger(Mode, Death);
     }
 
     public void VictoryAnim()
     {
-        PlayAnimation(victoryAnim, true);
+        _animator.SetInteger(Mode, Victory);
     }
 
-    public void PlayAnimation(string animationName, bool animationStatus)
+    public void RunAnim()
     {
-        _animator.SetBool(animationName, animationStatus);
+        _animator.SetInteger(Mode, Run);
     }
 
-    public void TriggerAnimation(string animationName)
+    IEnumerator PlayAttack()
     {
-        _animator.SetTrigger(animationName);
-    }
-
-    public float GetAnimationLength(string animName)
-    {
-        return _animator.GetCurrentAnimatorClipInfo(0).LongLength + 1;
-    }
-
-    IEnumerator TriggerdDeathAnimation()
-    {
-        _animator.SetTrigger(deathAnim);        
-        yield return new WaitForSeconds(GetAnimationLength(deathAnim));
-        Destroy(gameObject);
-    }
-
-    IEnumerator AttackAnimation(float attackInterval)
-    {
-        PlayAnimation(idleAnim, true);
-        yield return new WaitForSeconds(attackInterval);
-
-        PlayAnimation(attackAnim, true);
-        yield return new WaitForSeconds(GetAnimationLength(attackAnim));
-        PlayAnimation(attackAnim, false);
+        _animator.SetInteger(Mode, Attack);
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
     }
 }

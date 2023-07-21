@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        healthBar = GetComponentInChildren<HealthBar>();
+        healthBar = GetComponentInChildren<Canvas>().GetComponentInChildren<HealthBar>();
         animationManager = GetComponent<AnimationManager>();
 
         healthBar.SetMaxHealth(maxHealth);
@@ -29,12 +30,19 @@ public class Health : MonoBehaviour
     public void RecieveDamage(float damage)
     {
         currentHealth -= damage;
+        Debug.Log("Current Health = " + currentHealth);
         healthBar.SetHealth(currentHealth);
 
-        if(currentHealth <= 0)
+        if(currentHealth <= 0 && !gameObject.name.Contains("Tower"))
         {
             isAlive = false;
             animationManager.DeathAnim();
+            Destroy(gameObject);
+        }
+        else if(currentHealth <= 0 && gameObject.name.Contains("Tower"))
+        {
+            isAlive = false;
+            Destroy(gameObject);
         }
     }
 }

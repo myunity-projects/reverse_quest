@@ -1,21 +1,17 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using Cinemachine;
 
 public class ItemDropToTheSideScreen : MonoBehaviour, IDropHandler
 {
-    private Transform _allySpawnPoint;
-
-    private Dictionary<string, Vector3> _allyCoordinates = new Dictionary<string, Vector3>()
-    {
-        {"Vampire", new Vector3(0, 0, -2) },
-        {"Succubus", new Vector3(0, 0, 0) },
-        {"Skeleton", new Vector3(0, 0, 2) },
-    };
+    private Transform _undeadSpawnPoint;
+    private FindUnitsToAttack _findUnits;
 
     private void Start()
     {
-        _allySpawnPoint = GameObject.Find("AllySpawnPoint").transform;
+        _undeadSpawnPoint = GameObject.Find("UndeadSpawnPoint").transform;
+        _findUnits = GameObject.Find("FindEnemies").GetComponent<FindUnitsToAttack>();
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -33,8 +29,8 @@ public class ItemDropToTheSideScreen : MonoBehaviour, IDropHandler
 
             //добавляем на side поле
             Destroy(itemTransform.gameObject);
-            var createdObject = Instantiate(itemToInstantiateTransform, _allySpawnPoint);
-            createdObject.transform.localPosition = _allyCoordinates[nameWithoutLastSymbol];
+            var createdObject = Instantiate(itemToInstantiateTransform, _undeadSpawnPoint, true);
+            _findUnits.undeadWarriors.Add(createdObject);
         }
     }
 }
